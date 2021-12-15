@@ -94,6 +94,7 @@ function renderImages() {
   let productTwoIndex = getRandomIndex();
   let productThreeIndex = getRandomIndex();
 
+
   //console.log(productOneIndex, productTwoIndex, productThreeIndex);
 
   // //create a while loop to make sure that no images displayed in any set of 3 are the same and none of them are the same images as last time
@@ -110,6 +111,9 @@ function renderImages() {
 
     productThreeIndex = Math.floor(Math.random() * allProducts.length);
   }
+  lastShownImage[0] = productOneIndex;
+  lastShownImage[1] = productTwoIndex;
+  lastShownImage[2] = productThreeIndex;
 
   leftImage.src = allProducts[productOneIndex].src;
   leftImage.alt = allProducts[productOneIndex].name;
@@ -124,6 +128,54 @@ function renderImages() {
   allProducts[productThreeIndex].views++;
 }
 
+// Function that i need to render the chart
+function renderProductChart() {
+  const ctx = document.getElementById('Chart').getContext('2d');
+  //label for Axis
+  let productNames = [];
+  let productVotes = [];
+  let productViews = [];
+
+  for (let i = 0; i < allProducts.length; i++) {
+    productNames.push(allProducts[i].name);
+    productVotes.push(allProducts[i].clicks);
+    productViews.push(allProducts[i].views);
+  }
+
+  let myChartData = {
+    type: 'bar',
+    data: {
+      labels: productNames,
+      datasets: [{
+        label: '# of votes',
+        data: productVotes,
+        backgroundColor: 'rgba(54, 162, 235, 1)',
+        borderColor: 'rgba(54, 162, 235, 1)',
+        borderWidth: 1
+      },
+
+      {
+        label: '# of views',
+        data: productViews,
+        backgroundColor: 'rgba(255, 99, 132, 1)',
+        borderColor: 'rgba(255, 99, 132, 1)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  };
+
+  const chart = new Chart(ctx, myChartData);
+
+}
+
+
 //event hander for the clicks
 function handleImageClick(e) {
   clicks++;
@@ -137,7 +189,7 @@ function handleImageClick(e) {
   }
   //rerender
   renderImages();
-  //when it hits 25 dont allow anymore clicks /views
+  //when it hits 25 dont allow anymore clicks
   if (clicks === ATTEMPTS_ALLOWED) {
     //stop the event handler by removing the event listener
     myContainer.removeEventListener('click', handleImageClick);
@@ -153,9 +205,8 @@ function handleShowResultsClick() {
       let li = document.createElement('li');
       li.textContent = `${allProducts[i].name} had ${allProducts[i].clicks} votes and was seen ${allProducts[i].views} times `;
       displayResults.appendChild(li);
-
     }
-
+    renderProductChart();
   }
 
 }

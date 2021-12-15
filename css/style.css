@@ -24,11 +24,12 @@ section {
 
 img {
   width: 200px;
+  height:200px;
   border: 1px solid black;
   margin-top: 25px;
   margin-bottom: 25px;
   margin-right: 20px;
-}
+} 
 
 
 main div {
