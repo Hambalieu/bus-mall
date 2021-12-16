@@ -3,7 +3,7 @@
 
 //create an array
 let lastShownImage = [];
-const allProducts = [];
+let allProducts = [];
 
 let ATTEMPTS_ALLOWED = 25;
 let clicks = 0;
@@ -35,26 +35,37 @@ function Product(name, fileExtension = 'jpg') {
   allProducts.push(this);
 }
 
-//executable code.
-new Product('bag');
-new Product('banana');
-new Product('bathroom');
-new Product('boots');
-new Product('breakfast');
-new Product('bubblegum');
-new Product('chair');
-new Product('cthulhu');
-new Product('dog-duck');
-new Product('dragon');
-new Product('pen');
-new Product('pet-sweep');
-new Product('scissors');
-new Product('shark');
-new Product('sweep', 'png');
-new Product('tauntaun');
-new Product('unicorn');
-new Product('water-can');
-new Product('wine-glass');
+// Grab the data from the localStorage if its available.
+let retreivedProducts = localStorage.getItem('products');
+
+//use the data thats in the localStorage if there is Data
+if (retreivedProducts){
+  let parsedProducts = JSON.parse(retreivedProducts);
+  allProducts = parsedProducts;
+}else {
+  //executable code Product instanciationa.
+  new Product('bag');
+  new Product('banana');
+  new Product('bathroom');
+  new Product('boots');
+  new Product('breakfast');
+  new Product('bubblegum');
+  new Product('chair');
+  new Product('cthulhu');
+  new Product('dog-duck');
+  new Product('dragon');
+  new Product('pen');
+  new Product('pet-sweep');
+  new Product('scissors');
+  new Product('shark');
+  new Product('sweep', 'png');
+  new Product('tauntaun');
+  new Product('unicorn');
+  new Product('water-can');
+  new Product('wine-glass');
+}
+
+
 
 //function to get random index to show 3 different products.
 function getRandomIndex() {
@@ -65,7 +76,7 @@ let productOneIndex = getRandomIndex();
 let productTwoIndex = getRandomIndex();
 let productThreeIndex = getRandomIndex();
 
-console.log(productOneIndex, productTwoIndex, productThreeIndex);
+//console.log(productOneIndex, productTwoIndex, productThreeIndex);
 
 // //create a while loop to make sure that no images displayed in any set of 3 are the same and none of them are the same images as last time
 
@@ -131,7 +142,7 @@ function renderImages() {
 // Function that i need to render the chart
 function renderProductChart() {
   const ctx = document.getElementById('Chart').getContext('2d');
-  //label for Axis
+  //label for chart
   let productNames = [];
   let productVotes = [];
   let productViews = [];
@@ -193,7 +204,18 @@ function handleImageClick(e) {
   if (clicks === ATTEMPTS_ALLOWED) {
     //stop the event handler by removing the event listener
     myContainer.removeEventListener('click', handleImageClick);
+
+    //stringify my data so that i can store it into my localStorage
+    let stringifiedProducts = JSON.stringify(allProducts);
+    //console.log(stringifiedProducts);
+
+    // saved my data into the localStorage
+    localStorage.setItem('products', stringifiedProducts);
+
+
+
   }
+
 
 }
 //dispaly results in a list
